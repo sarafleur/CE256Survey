@@ -1,0 +1,53 @@
+<h2>Page 1: your commute options</h2>
+<link rel="stylesheet" href="../public/default.css" type="text/css">
+
+<% if flash[:message] %>
+  <p>
+    <span class="error"><%= flash[:message] %></span>
+  </p>
+<% end %>
+
+<form action="/page1" method="POST" >
+  <ol role="list" class="question-list" >
+          <ul class="question-item">
+            <div class="question-title">Do you own a transit pass?</div>
+            <div class="question-description"></div>
+              <ul>
+                <input type="radio" name="has_transit_pass" value="Yes" id="transit_pass_yes" role="radio">
+                <span class="choice-label">Yes</span>
+              </ul>
+              <ul>
+                <input type="radio" name="has_transit_pass" value="No" id="transit_pass_no" role="radio">
+                <span class="choice-label">No</span>
+              </ul>
+          </ul>
+          <ul class="question-item">
+            <div class="question-title">Do you own a car?</div>
+            <div class="question-description">Or have you access to a car you can use for free?</div>
+              <ul>
+                <input type="radio" name="has_car" value="Yes" id="car_yes" role="radio">
+                <span class="choice-label">Yes</span>
+              </ul>
+              <ul>
+                <input type="radio" name="has_car" value="No" id="car_no" role="radio">
+                <span class="choice-label">No</span>
+              </ul>
+          </ul>
+          <ul class="question-item">
+            <div class="question-title">Do you own a bike?</div>
+            <div class="question-description">Or have you access to a bike you can use for free?</div>
+              <ul>
+                <input type="radio" name="has_bike" value="Yes" id="bike_yes" role="radio">
+                <span class="choice-label">Yes</span>
+              </ul>
+              <ul>
+                <input type="radio" name="has_bike" value="No" id="bike_no" role="radio">
+                <span class="choice-label">No</span>
+              </ul>
+          </ul>
+  <div class="ss-item ss-navigate"><table id="navigation-table"><tbody><tr>
+    <input type="submit" name="continue" value="Continue &raquo;" id="ss-submit" class="continue-button">
+    </tr></tbody></table>
+  </div>
+  </ol>
+  </form>

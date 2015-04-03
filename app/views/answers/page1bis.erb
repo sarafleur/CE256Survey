@@ -1,0 +1,44 @@
+<h2>Page 1bis: Further information</h2>
+
+<% if flash[:message] %>
+  <p>
+    <span class="error"><%= flash[:message] %></span>
+  </p>
+<% end %>
+
+<form action="/page1bis" method="POST" >
+  <ol role="list" class="question-list" >
+    <% if session[:has_car] %>
+          <ul class="question-item">
+            <div class="question-title">Is your car a low emission car?</div>
+            <div class="question-description">Or the car you use for free. As an example: Prius, Tesla...</div>
+              <ul>
+                <input type="radio" name="has_e_car" value="Yes" id="e_car_yes" role="radio">
+                <span class="choice-label">Yes</span>
+              </ul>
+              <ul>
+                <input type="radio" name="has_e_car" value="No" id="e_car_no" role="radio">
+                <span class="choice-label">No</span>
+              </ul>
+          </ul>
+    <% end %>
+    <% if session[:has_bike] %>
+          <ul class="question-item">
+            <div class="question-title">Is your bike an electric bike?</div>
+            <div class="question-description">Or have you access to a bike you can use for free?</div>
+              <ul>
+                <input type="radio" name="has_e_bike" value="Yes" id="e_bike_yes" role="radio">
+                <span class="choice-label">Yes</span>
+              </ul>
+              <ul>
+                <input type="radio" name="has_e_bike" value="No" id="e_bike_no" role="radio">
+                <span class="choice-label">No</span>
+              </ul>
+          </ul>
+    <% end %>
+  <div class="ss-item ss-navigate"><table id="navigation-table"><tbody><tr>
+    <input type="submit" name="continue" value="Continue &raquo;" id="ss-submit" class="continue-button">
+    </tr></tbody></table>
+  </div>
+  </ol>
+  </form>

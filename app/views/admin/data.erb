@@ -1,0 +1,58 @@
+<h1>Here are all the results posted so far: <%= @count %></h1>
+<%= @data %>
+<form action="/admin/data" method="post">
+<table id='transit_options'>
+  <thead>
+    <tr>
+      <th> Delete </th>
+      <th> has_transit_pass </th>
+      <th> has_car </th>
+      <th> has_e_car </th>
+      <th> has_bike </th>
+      <th> has_e_bike </th>
+      <th> lat_origin </th>
+      <th> lat_destination </th>
+      <th> lon_origin </th>
+      <th> lon_destination </th>
+      <th> activity </th>
+      <th> time_car </th>
+      <th> time_bike </th>
+      <th> time_walk </th>
+      <th> time_transit_total </th>
+      <th> time_transit_walk </th>
+      <th> price_transit_pass_proposed </th>
+      <th> wants_transit_pass </th>
+      <th> age </th>
+      <th> income </th>
+      <th> created_at </th>
+    </tr>
+  </thead>
+  <tbody>
+      <% for answer in @answers %>
+        <tr>
+          <td> <button type="submit" name="delete" value = <%= answer.id %> > Delete </button> </td>
+          <td> <%=answer.has_transit_pass %> </td>
+          <td> <%=answer.has_car %> </td>
+          <td> <%=answer.has_e_car %> </td>
+          <td> <%=answer.has_bike %> </td>
+          <td> <%=answer.has_e_bike %> </td>
+          <td> <%=answer.lat_origin %> </td>
+          <td> <%=answer.lat_destination %> </td>
+          <td> <%=answer.lon_origin %> </td>
+          <td> <%=answer.lon_destination %> </td>
+          <td> <%=answer.activity %> </td>
+          <td> <%=answer.time_car %> </td>
+          <td> <%=answer.time_bike %> </td>
+          <td> <%=answer.time_walk %> </td>
+          <td> <%=answer.time_transit_total %> </td>
+          <td> <%=answer.time_transit_walk %> </td>
+          <td> <%=answer.price_transit_pass_proposed %> </td>
+          <td> <%=answer.wants_transit_pass %> </td>
+          <td> <%=answer.age %> </td>
+          <td> <%=answer.income %> </td>
+          <td> <%=answer.created_at %> </td>
+        </tr>
+      <% end %>
+  </tbody>
+</table>
+</form>

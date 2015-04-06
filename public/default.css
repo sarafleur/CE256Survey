@@ -1,3 +1,19 @@
-th {
+th,.row_header {
+  font-weight:bold;
+  max-width: 400px;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 10px;
+}
+
+.error {
+  color: red;
+}
+
+.highlight {
+  color: red;
   font-weight:bold;
 }

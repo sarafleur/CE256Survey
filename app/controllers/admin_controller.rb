@@ -5,4 +5,18 @@ class AdminController < ApplicationController
     render('index')
   end
 
+  def data
+    if params[:password_admin] == 'givemethedata' || session[:connected]
+      session[:connected] = true
+      if params['delete']
+        Answer.find(params['delete']).destroy!
+      end
+      @answers = Answer.all
+      @count = Answer.count()
+      render('data')
+    else
+      flash[:message] = "The admin password is required to see the results"
+      redirect_to '/admin'
+    end
+  end
 end

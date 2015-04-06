@@ -30,7 +30,7 @@
 <table id='transit_options'>
   <thead>
     <tr>
-      <th> \</th>
+      <th> </th>
       <% if session[:has_car] %><th> Car </th> <% end %>
       <% if session[:has_bike] %><th> Bike </th> <% end %>
       <th> Transit </th>
@@ -40,7 +40,7 @@
   </thead>
   <tbody>
     <tr>
-      <td style="font-weight:bold;"> Category</td>
+      <td class="row_header"> Category</td>
       <% if session[:has_car] %> <td> Your car </td> <% end %>
       <% if session[:has_bike] %> <td> Your bike </td> <% end %>
       <td> Public transit </td>
@@ -48,7 +48,7 @@
       <td> Bike/e Bike </td>
     </tr>
     <tr>
-      <td style="font-weight:bold;"> Total Travel Time door to door (source: Google)</td>
+      <td class="row_header"> Total Travel Time door to door (source: Google)</td>
       <% if session[:has_car] %> <td> <%= session[:time_car] %> </td> <% end %>
       <% if session[:has_bike] %> <td> <%= session[:time_bike] %> </td> <% end %>
       <td> <%= session[:time_transit_total] %> </td>
@@ -56,12 +56,22 @@
       <td> <%= session[:time_bike] %> </td>
     </tr>
     <tr>
-      <td style="font-weight:bold;"> total walking time to stations, arrival and departure (included in the total travel time) in min</td>
+      <td class="row_header"> Total walking time to stations, arrival and departure (included in the total travel time) in min</td>
       <% if session[:has_car] %> <td> 0 </td> <% end %>
       <% if session[:has_bike] %> <td> 0 </td> <% end %>
       <td> <%= session[:time_transit_walk] %> </td>
       <td> 0 </td>
       <td> 0 </td>
+    </tr>
+    <tr>
+      <td class="row_header"> Total walking time to stations, arrival and departure (included in the total travel time) in min</td>
+      <% if session[:has_car] %> <td> $<%= session[:cost_car] %> </td> <% end %>
+      <% if session[:has_bike] %> <td> 0 </td> <% end %>
+      <% if session[:has_transit_pass] %> <td> 0 </td>
+      <% else %> <td> $2.5 </td> <% end %>
+      <td> 0 </td>
+      <% if session[:time_bike_sec] < 1800 %> <td> <p class="highlight">With membership: $0</p> <p class="highlight">Without membership: $9</p> </td>
+      <% else %> <td> <p class="highlight">With membership: $4</p> <p class="highlight">Without membership: $11</p> </td> <% end %>
     </tr>
   </tbody>
 </table>

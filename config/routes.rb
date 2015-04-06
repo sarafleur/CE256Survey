@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   resources :answers
   get '/admin' =>'admin#index'
+  post '/admin/data' => 'admin#data'
 
+  #Survey routes
   get '/' => 'answers#open_page'
   get '/new' => 'answers#new_survey'
   post '/new' => 'answers#new_survey_creation'
@@ -13,6 +15,10 @@ Rails.application.routes.draw do
   post '/page2' => 'answers#answer_page2'
   get '/page3' => 'answers#render_page3'
   post '/page3' => 'answers#answer_page3'
+  get '/page4' => 'answers#render_page4'
+  post '/page4' => 'answers#answer_page4'
+  get '/page5' => 'answers#render_page5'
+
 
 
   # The priority is based upon order of creation: first created -> highest priority.

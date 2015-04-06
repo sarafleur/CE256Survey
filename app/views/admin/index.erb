@@ -1,4 +1,10 @@
-<h1>Here are all the results posted so far</h1>
-<form method="post">
-  <input type="submit" value="New Survey"/>
+<h1>Enter the magic password</h1>
+<% if flash[:message] %>
+  <p>
+    <span class="error"><%= flash[:message] %></span>
+  </p>
+<% end %>
+<form action="/admin/data" method="post">
+  <input name="password_admin" size="50" id="password_admin">
+  <input type="submit" value="See the data"/>
 </form>

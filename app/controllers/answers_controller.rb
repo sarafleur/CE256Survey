@@ -104,6 +104,7 @@ class AnswersController < ApplicationController
       redirect_to '/page2'
     end
     session[:time_car] = json_car['routes'][0]['legs'][0]['duration']['text']
+    session[:time_car_sec] = json_car['routes'][0]['legs'][0]['duration']['value']
     #In meters
     distance_car = json_car['routes'][0]['legs'][0]['distance']['value']
     #FIXME: Cost/meter for a car: current source http://commutesolutions.org/external/calc.html
@@ -128,6 +129,7 @@ class AnswersController < ApplicationController
       redirect_to '/page2'
     end
     session[:time_walk] = json_walk['routes'][0]['legs'][0]['duration']['text']
+    session[:time_walk_sec] = json_walk['routes'][0]['legs'][0]['duration']['value']
     #Store time duration for transit and time walking to station
     response_transit = HTTParty.get("http://maps.googleapis.com/maps/api/directions/json?origin=#{session[:lat_origin]},#{session[:lon_origin]}&destination=#{session[:lat_destination]},#{session[:lon_destination]}&mode=transit")
     json_transit = JSON.parse(response_transit.body)
@@ -137,6 +139,7 @@ class AnswersController < ApplicationController
       redirect_to '/page2'
     end
     session[:time_transit_total] = json_transit['routes'][0]['legs'][0]['duration']['text']
+    session[:time_transit_total_sec] = json_transit['routes'][0]['legs'][0]['duration']['value']
     steps = json_transit['routes'][0]['legs'][0]['steps']
     duration_walking = 0
     for step in steps
@@ -144,6 +147,7 @@ class AnswersController < ApplicationController
         duration_walking += step['duration']['value']
       end
     end
+    session[:time_transit_walk_sec] = duration_walking
     session[:time_transit_walk] = "#{duration_walking/3600} hours #{(duration_walking%3600)/60} mins"
     render('page3')
   end
@@ -186,11 +190,11 @@ class AnswersController < ApplicationController
     :lon_origin => session[:lon_origin],
     :lon_destination => session[:lon_destination],
     :activity => 'work',
-    :time_car => session[:time_car],
-    :time_bike => session[:time_bike],
-    :time_walk => session[:time_walk],
-    :time_transit_total => session[:time_transit_total],
-    :time_transit_walk => session[:time_transit_walk],
+    :time_car => session[:time_car_sec],
+    :time_bike => session[:time_bike_sec],
+    :time_walk => session[:time_walk_sec],
+    :time_transit_total => session[:time_transit_total_sec],
+    :time_transit_walk => session[:time_transit_walk_sec],
     :price_transit_pass_proposed => session[:price_transit_pass_proposed],
     :wants_transit_pass => session[:wants_transit_pass],
     :age => session[:age],

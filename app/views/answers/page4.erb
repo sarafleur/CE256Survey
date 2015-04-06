@@ -13,7 +13,7 @@
             <div class="question-description"></div>
             <select name="age" id="age">
               <% for i in 0..100 %>
-                <option value=i><%= i %></option>
+                <option value= <%= i %> ><%= i %></option>
               <% end %>
             </select>
           </ul>
@@ -22,7 +22,7 @@
             <div class="question-description"></div>
             <select name="income" id="income">
               <% for income in session[:income_possibilities] %>
-                <option value=income><%= income %></option>
+                <option value= <%= income %> ><%= income %></option>
               <% end %>
             </select>
           </ul>

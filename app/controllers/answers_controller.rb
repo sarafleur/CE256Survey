@@ -168,7 +168,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_page4
-    1/0
     if params[:age] && params[:income]
       session[:age] = params[:age]
       session[:income] = params[:income]

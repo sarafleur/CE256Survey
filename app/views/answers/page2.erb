@@ -1,1 +1,26 @@
 <h2>Page 2: Home/Work Locations</h2>
+
+<% if flash[:message] %>
+  <p>
+    <span class="error"><%= flash[:message] %></span>
+  </p>
+<% end %>
+
+<form action="/page2" method="POST" >
+  <ol role="list" class="question-list" >
+          <ul class="question-item">
+            <div class="question-title">Where do you live? Please enter a valid adress.</div>
+            <div class="question-description">This adress won't be stored, we will just use it to compute the commuting time. Example: 140 Market St, San Francisco, CA </div>
+                <input name="address_origin" size="100" id="address_origin">
+          </ul>
+          <ul class="question-item">
+            <div class="question-title">Where do you work? Please enter a valid adress.</div>
+            <div class="question-description">This adress won't be stored, we will just use it to compute the commuting time. Example: 2333 Fulton Street, 94704, Berkeley, CA </div>
+                <input name="address_destination" size="100" id="address_destination">
+          </ul>
+  <div class="ss-item ss-navigate"><table id="navigation-table"><tbody><tr>
+    <input type="submit" name="continue" value="Continue &raquo;" id="ss-submit" class="continue-button">
+    </tr></tbody></table>
+  </div>
+  </ol>
+  </form>

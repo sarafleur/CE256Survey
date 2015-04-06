@@ -1,0 +1,67 @@
+<h2>Page 3: Best transit option</h2>
+
+<% if flash[:message] %>
+  <p>
+    <span class="error"><%= flash[:message] %></span>
+  </p>
+<% end %>
+
+<form action="/page3" method="POST" >
+  <ol role="list" class="question-list" >
+    <ul class="question-item">
+      <div class="question-title">Given what you see in the table below, would you consider taking a year bike-sharing membership? Price is <%= session[:price_transit_pass_proposed] %></div>
+      <div class="question-description"></div>
+        <ul>
+          <input type="radio" name="wants_transit_pass" value="Yes" id="wants_transit_pass_yes" role="radio">
+          <span class="choice-label">Yes</span>
+        </ul>
+        <ul>
+          <input type="radio" name="wants_transit_pass" value="No" id="wants_transit_pass_no" role="radio">
+          <span class="choice-label">No</span>
+        </ul>
+    </ul>
+  <div class="ss-item ss-navigate"><table id="navigation-table"><tbody><tr>
+    <input type="submit" name="continue" value="Continue &raquo;" id="ss-submit" class="continue-button">
+    </tr></tbody></table>
+  </div>
+  </ol>
+</form>
+
+<table id='transit_options'>
+  <thead>
+    <tr>
+      <th> \</th>
+      <% if session[:has_car] %><th> Car </th> <% end %>
+      <% if session[:has_bike] %><th> Bike </th> <% end %>
+      <th> Transit </th>
+      <th> Walk</th>
+      <th> Bike Sharing</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="font-weight:bold;"> Category</td>
+      <% if session[:has_car] %> <td> Your car </td> <% end %>
+      <% if session[:has_bike] %> <td> Your bike </td> <% end %>
+      <td> Public transit </td>
+      <td> Your feet </td>
+      <td> Bike/e Bike </td>
+    </tr>
+    <tr>
+      <td style="font-weight:bold;"> Total Travel Time door to door (source: Google)</td>
+      <% if session[:has_car] %> <td> <%= session[:time_car] %> </td> <% end %>
+      <% if session[:has_bike] %> <td> <%= session[:time_bike] %> </td> <% end %>
+      <td> <%= session[:time_transit_total] %> </td>
+      <td> <%= session[:time_walk] %> </td>
+      <td> <%= session[:time_bike] %> </td>
+    </tr>
+    <tr>
+      <td style="font-weight:bold;"> total walking time to stations, arrival and departure (included in the total travel time) in min</td>
+      <% if session[:has_car] %> <td> 0 </td> <% end %>
+      <% if session[:has_bike] %> <td> 0 </td> <% end %>
+      <td> <%= session[:time_transit_walk] %> </td>
+      <td> 0 </td>
+      <td> 0 </td>
+    </tr>
+  </tbody>
+</table>

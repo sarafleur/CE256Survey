@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   resources :answers
+  get '/admin' =>'admin#index'
+
   get '/' => 'answers#open_page'
   get '/new' => 'answers#new_survey'
   post '/new' => 'answers#new_survey_creation'
@@ -8,6 +10,11 @@ Rails.application.routes.draw do
   get '/page1bis' => 'answers#render_page1bis'
   post '/page1bis' => 'answers#answer_page1bis'
   get '/page2' => 'answers#render_page2'
+  post '/page2' => 'answers#answer_page2'
+  get '/page3' => 'answers#render_page3'
+  post '/page3' => 'answers#answer_page3'
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

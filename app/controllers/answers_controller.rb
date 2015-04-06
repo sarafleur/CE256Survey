@@ -1,3 +1,9 @@
+require 'rubygems'
+require 'bundler'
+require 'geokit'
+require 'json'
+require 'httparty'
+
 class AnswersController < ApplicationController
   before_action :set_answer, only: [:show, :edit, :update, :destroy]
 
@@ -73,94 +79,49 @@ class AnswersController < ApplicationController
     render('page2')
   end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  # GET /answers
-  # GET /answers.json
-  def index
-    @answers = Answer.all
+  def answer_page2
+    if params[:address_origin] && params[:address_destination]
+      session[:lat_origin] = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address_origin]).lat
+      session[:lon_origin] = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address_origin]).lng
+      session[:lat_destination] = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address_destination]).lat
+      session[:lon_destination] = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address_destination]).lng
+      redirect_to '/page3'
+    else
+      flash[:message] = "All the questions are required on this page."
+      redirect_to '/page2'
+    end
   end
 
-  # GET /answers/1
-  # GET /answers/1.json
-  def show
-  end
-
-  # GET /answers/new
-  def new
-    @answer = Answer.new
-  end
-
-  # GET /answers/1/edit
-  def edit
-  end
-
-  # POST /answers
-  # POST /answers.json
-  def create
-    @answer = Answer.new(answer_params)
-
-    respond_to do |format|
-      if @answer.save
-        format.html { redirect_to_to @answer, notice: 'Answer was successfully created.' }
-        format.json { render :show, status: :created, location: @answer }
-      else
-        format.html { render :new }
-        format.json { render json: @answer.errors, status: :unprocessable_entity }
+  def render_page3
+    session[:price_transit_pass_proposed] = 90
+    #Store time duration for car
+    response_car = HTTParty.get("http://maps.googleapis.com/maps/api/directions/json?origin=#{session[:lat_origin]},#{session[:lon_origin]}&destination=#{session[:lat_destination]},#{session[:lon_destination]}&mode=driving")
+    json_car = JSON.parse(response_car.body)
+    session[:time_car] = json_car['routes'][0]['legs'][0]['duration']['text']
+    #Store time duration for bikes
+    response_bike = HTTParty.get("http://maps.googleapis.com/maps/api/directions/json?origin=#{session[:lat_origin]},#{session[:lon_origin]}&destination=#{session[:lat_destination]},#{session[:lon_destination]}&mode=bicycling")
+    json_bike = JSON.parse(response_bike.body)
+    session[:time_bike] = json_bike['routes'][0]['legs'][0]['duration']['text']
+    #Store time duration for walk
+    response_walk = HTTParty.get("http://maps.googleapis.com/maps/api/directions/json?origin=#{session[:lat_origin]},#{session[:lon_origin]}&destination=#{session[:lat_destination]},#{session[:lon_destination]}&mode=walking")
+    json_walk = JSON.parse(response_walk.body)
+    session[:time_walk] = json_walk['routes'][0]['legs'][0]['duration']['text']
+    #Store time duration for transit and time walking to station
+    response_transit = HTTParty.get("http://maps.googleapis.com/maps/api/directions/json?origin=#{session[:lat_origin]},#{session[:lon_origin]}&destination=#{session[:lat_destination]},#{session[:lon_destination]}&mode=transit")
+    json_transit = JSON.parse(response_transit.body)
+    session[:time_transit_total] = json_transit['routes'][0]['legs'][0]['duration']['text']
+    steps = json_transit['routes'][0]['legs'][0]['steps']
+    duration_walking = 0
+    for step in steps
+      if step['travel_mode'] == 'WALKING'
+        duration_walking += step['duration']['value']
       end
     end
+    session[:time_transit_walk] = "#{duration_walking/3600} hours #{(duration_walking%3600)/60} mins"
+    render('page3')
   end
 
-  # PATCH/PUT /answers/1
-  # PATCH/PUT /answers/1.json
-  def update
-    respond_to do |format|
-      if @answer.update(answer_params)
-        format.html { redirect_to_to @answer, notice: 'Answer was successfully updated.' }
-        format.json { render :show, status: :ok, location: @answer }
-      else
-        format.html { render :edit }
-        format.json { render json: @answer.errors, status: :unprocessable_entity }
-      end
-    end
+  def answer_page3
+    render('page4')
   end
-
-  # DELETE /answers/1
-  # DELETE /answers/1.json
-  def destroy
-    @answer.destroy
-    respond_to do |format|
-      format.html { redirect_to_to answers_url, notice: 'Answer was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_answer
-      @answer = Answer.find(params[:id])
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def answer_params
-      params[:answer]
-    end
 end

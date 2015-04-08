@@ -5,6 +5,7 @@
   <thead>
     <tr>
       <th> Delete </th>
+      <th> peopleId </th>
       <th> has_transit_pass </th>
       <th> has_car </th>
       <th> has_e_car </th>
@@ -31,6 +32,7 @@
       <% for answer in @answers %>
         <tr>
           <td> <button type="submit" name="delete" value = <%= answer.id %> > Delete </button> </td>
+          <td> <%=answer.peopleId %> </td>
           <td> <%=answer.has_transit_pass %> </td>
           <td> <%=answer.has_car %> </td>
           <td> <%=answer.has_e_car %> </td>

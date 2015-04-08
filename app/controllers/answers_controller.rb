@@ -3,10 +3,12 @@ require 'bundler'
 require 'geokit'
 require 'json'
 require 'httparty'
+require 'variableHelper'
+require 'functionHelper'
 
 class AnswersController < ApplicationController
   before_action :set_answer, only: [:show, :edit, :update, :destroy]
-
+  helper AnswersHelper
   def open_page
     redirect_to '/new'
   end
@@ -16,6 +18,7 @@ class AnswersController < ApplicationController
   end
 
   def new_survey_creation
+    session[:peopleId] = Answer.nextPeopleId
     redirect_to '/page1'
   end
 
@@ -108,7 +111,7 @@ class AnswersController < ApplicationController
     #In meters
     distance_car = json_car['routes'][0]['legs'][0]['distance']['value']
     #FIXME: Cost/meter for a car: current source http://commutesolutions.org/external/calc.html
-    cost_per_meter = 1.37 / (1.61 * 1000)
+    #cost_per_meter = 1.37 / (1.61 * 1000)
     session[:cost_car] = (distance_car * cost_per_meter).round(2)
     #Store time duration for bikes
     response_bike = HTTParty.get("http://maps.googleapis.com/maps/api/directions/json?origin=#{session[:lat_origin]},#{session[:lon_origin]}&destination=#{session[:lat_destination]},#{session[:lon_destination]}&mode=bicycling")
@@ -154,7 +157,7 @@ class AnswersController < ApplicationController
 
   def answer_page3
     if params[:wants_transit_pass]
-      session[:wants_transit_pass] = params[:wants_transit_pass]
+      session[:wants_transit_pass] = (params[:wants_transit_pass] == 'Yes')
       redirect_to('/page4')
     else
       flash[:message] = "All the questions are required on this page."
@@ -180,6 +183,7 @@ class AnswersController < ApplicationController
 
   def render_page5
     @answer = Answer.new(
+    :peopleId => session[:peopleId],
     :has_transit_pass => session[:has_transit_pass],
     :has_car => session[:has_car],
     :has_e_car => session[:has_e_car],

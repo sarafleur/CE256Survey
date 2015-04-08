@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150406010513) do
+ActiveRecord::Schema.define(version: 20150408041658) do
 
   create_table "answers", force: :cascade do |t|
     t.boolean  "has_transit_pass"
@@ -35,5 +35,7 @@ ActiveRecord::Schema.define(version: 20150406010513) do
     t.string   "income"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+    t.integer  "peopleId"
   end
+
 end

@@ -26,6 +26,7 @@ class AdminController < ApplicationController
     @count = Answer.count()
     @answers = Answer.all
     @csv = Answer.to_csv
-    render 'csv'
+    send_data @csv.to_s, :type => 'text/csv', :disposition => 'attachment'
+    #redirect_to('/admin/data')
   end
 end

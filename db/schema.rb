@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150409062113) do
+ActiveRecord::Schema.define(version: 20150409225059) do
 
   create_table "answers", force: :cascade do |t|
     t.boolean  "has_transit_pass"
@@ -40,6 +40,18 @@ ActiveRecord::Schema.define(version: 20150409062113) do
     t.float    "time_bikesharing_total"
     t.float    "time_bikesharing_walking"
     t.string   "bikesharing_option"
+    t.float    "cost_car"
+    t.float    "cost_transit"
+    t.float    "cost_bikesharing_member"
+    t.float    "cost_bikesharing_non_member"
+    t.float    "GHG_car"
+    t.float    "GHG_transit"
+    t.float    "GHG_bikesharing"
+    t.float    "cal_car"
+    t.float    "cal_bike"
+    t.float    "cal_transit"
+    t.float    "cal_walk"
+    t.float    "cal_bikesharing"
   end
 
 end

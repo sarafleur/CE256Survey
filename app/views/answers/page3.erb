@@ -45,7 +45,7 @@
       <% if session[:has_bike] %> <td> Your bike </td> <% end %>
       <td> Public transit </td>
       <td> Your feet </td>
-      <td> <%= session[:bike_or_ebike] %> </td>
+      <td class="highlight"> <%= session[:bike_or_ebike] %> </td>
     </tr>
     <tr>
       <td class="row_header"> Total Travel Time door to door (source: Google)</td>
@@ -66,15 +66,16 @@
     <tr>
       <td class="row_header"> Cost ($)</td>
       <% if session[:has_car] %> <td> $<%= session[:cost_car] %> </td> <% end %>
-      <% if session[:has_bike] %> <td> 0 </td> <% end %>
-      <% if session[:has_transit_pass] %> <td> 0 </td>
-      <% else %> <td> $<%= session[:cost_transit] %> </td> <% end %>
-      <td> 0 </td>
-      <% if session[:time_bikesharing_total_sec] < 1800 %> <td> <p class="highlight">With membership: $0</p> <p class="highlight">Without membership: $9</p> </td>
-      <% else %> <td> <p class="highlight">With membership: $4</p> <p class="highlight">Without membership: $11</p> </td> <% end %>
+      <% if session[:has_bike] %> <td> $0 </td> <% end %>
+      <td> $<%= session[:cost_transit] %> </td>
+      <td> $0 </td>
+      <td>
+        <p class="highlight">With membership: <%= session[:cost_bikesharing_member] %> </p>
+        <p class="highlight">Without membership: <%= session[:cost_bikesharing_non_member] %> </p>
+      </td>
     </tr>
     <tr>
-      <td class="row_header"> GHG </td>
+      <td class="row_header"> GHG (lbs CO2) </td>
       <% if session[:has_car] %> <td> <%= session[:ghg_car] %> </td> <% end %>
       <% if session[:has_bike] %> <td> 0 </td> <% end %>
       <td> <%= session[:ghg_transit] %> </td>
@@ -82,8 +83,8 @@
       <td><%= session[:ghg_bikesharing] %></td>
     </tr>
     <tr>
-      <td class="row_header"> Calories </td>
-      <% if session[:has_car] %> <td> Close to 0 </td> <% end %>
+      <td class="row_header"> Calories (kcal)</td>
+      <% if session[:has_car] %> <td> <%= session[:calories_car] %> </td> <% end %>
       <% if session[:has_bike] %> <td> <%= session[:calories_bike] %> </td> <% end %>
       <td> <%= session[:calories_transit] %> </td>
       <td> <%= session[:calories_walk] %> </td>

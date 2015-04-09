@@ -1,3 +1,5 @@
+require 'csv'
+
 class AdminController < ApplicationController
   before_action :set_answer, only: [:show, :edit, :update, :destroy]
 
@@ -18,5 +20,12 @@ class AdminController < ApplicationController
       flash[:message] = "The admin password is required to see the results"
       redirect_to '/admin'
     end
+  end
+
+  def export_csv
+    @count = Answer.count()
+    @answers = Answer.all
+    @csv = Answer.to_csv
+    render 'csv'
   end
 end

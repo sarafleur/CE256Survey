@@ -45,6 +45,24 @@
                 <span class="choice-label">No</span>
               </ul>
           </ul>
+          <ul class="question-item">
+            <div class="question-title">What is your age?</div>
+            <div class="question-description"></div>
+            <select name="age" id="age">
+              <% for i in 0..100 %>
+                <option value= <%= i %> ><%= i %></option>
+              <% end %>
+            </select>
+          </ul>
+          <ul class="question-item">
+            <div class="question-title">What is your income?</div>
+            <div class="question-description"></div>
+            <select name="income" id="income">
+              <% for income in session[:income_possibilities] %>
+                <option value= <%= income %> ><%= income %></option>
+              <% end %>
+            </select>
+          </ul>
   <div class="ss-item ss-navigate"><table id="navigation-table"><tbody><tr>
     <input type="submit" name="continue" value="Continue &raquo;" id="ss-submit" class="continue-button">
     </tr></tbody></table>

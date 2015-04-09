@@ -1,5 +1,9 @@
 <h1>Here are all the results posted so far: <%= @count %></h1>
 <%= @data %>
+<form action="/admin/csv" method="get">
+  <button type="submit" name="export_csv"> Export CSV </button>
+</form>
+
 <form action="/admin/data" method="post">
 <table id='transit_options'>
   <thead>
@@ -16,11 +20,15 @@
       <th> lon_origin </th>
       <th> lon_destination </th>
       <th> activity </th>
+      <th> frequency </th>
       <th> time_car (s) </th>
       <th> time_bike (s) </th>
       <th> time_walk (s) </th>
       <th> time_transit_total (s) </th>
       <th> time_transit_walk (s) </th>
+      <th> time_bikesharing_total (s) </th>
+      <th> time_bikesharing_walking (s) </th>
+      <th> bikesharing_option </th>
       <th> price_transit_pass_proposed </th>
       <th> wants_transit_pass </th>
       <th> age </th>
@@ -43,11 +51,15 @@
           <td> <%=answer.lon_origin %> </td>
           <td> <%=answer.lon_destination %> </td>
           <td> <%=answer.activity %> </td>
+          <td> <%=answer.frequency %> </td>
           <td> <%=answer.time_car %> </td>
           <td> <%=answer.time_bike %> </td>
           <td> <%=answer.time_walk %> </td>
           <td> <%=answer.time_transit_total %> </td>
           <td> <%=answer.time_transit_walk %> </td>
+          <td> <%=answer.time_bikesharing_total %> </td>
+          <td> <%=answer.time_bikesharing_walking %> </td>
+          <td> <%=answer.bikesharing_option %> </td>
           <td> <%=answer.price_transit_pass_proposed %> </td>
           <td> <%=answer.wants_transit_pass %> </td>
           <td> <%=answer.age %> </td>

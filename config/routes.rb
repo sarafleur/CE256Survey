@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   resources :answers
   get '/admin' =>'admin#index'
   post '/admin/data' => 'admin#data'
+  get '/admin/data' => 'admin#data'
+  get '/admin/csv' => 'admin#export_csv'
+  
 
   #Survey routes
   get '/' => 'answers#open_page'
@@ -15,9 +18,12 @@ Rails.application.routes.draw do
   post '/page2' => 'answers#answer_page2'
   get '/page3' => 'answers#render_page3'
   post '/page3' => 'answers#answer_page3'
-  get '/page4' => 'answers#render_page4'
-  post '/page4' => 'answers#answer_page4'
-  get '/page5' => 'answers#render_page5'
+  get '/activity1' => 'answers#render_activity1'
+  post '/activity1' => 'answers#answer_activity1'
+  get '/activity2' => 'answers#render_activity2'
+  post '/activity2' => 'answers#answer_activity2'
+  get '/last' => 'answers#render_last'
+
 
 
 

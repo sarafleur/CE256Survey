@@ -1,0 +1,6 @@
+<h1>Here are all the results posted so far in CSV format: <%= @count %></h1>
+<%= @data %>
+<form action="/admin/data" method="get">
+  <button type="submit" name="back_to_data"> Back to the Data </button>
+</form>
+<p> <%= @csv %> </p>

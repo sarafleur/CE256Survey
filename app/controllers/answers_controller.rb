@@ -28,8 +28,7 @@ class AnswersController < ApplicationController
     @@calories_ebike_per_hour = 300.0
     @@calories_walk_per_hour = 270.0
     @@calories_transit_per_hour = 140.0
-    #Rate to walking to a transit station rather than a bike station
-    @@time_walk_bike = [0.5,1,1.5]
+    @@time_walk_bike = [5,10,15]
     @@speed_ebike = 1/1.4 #relative to the speed of a regular bike
     @@price_bike_proposed = [90, 100, 110]
     @@income_possibilities = ['<20k', '20k - 50k', '50k - 80k', '> 80k']
@@ -145,7 +144,7 @@ class AnswersController < ApplicationController
       session[:calories_transit] = session[:calories_transit].round
 
       #Store variables for bikesharing
-      session[:time_bikesharing_walking_sec] = (@@time_walk_bike.sample * session[:time_transit_walk_sec]).round
+      session[:time_bikesharing_walking_sec] = @@time_walk_bike.sample
       session[:time_bikesharing_bike_sec] = (session[:bike_or_ebike] == 'Bike') ? session[:time_bike_sec] : (session[:time_bike_sec] * @@speed_ebike).round
       session[:time_bikesharing_total_sec] = session[:time_bikesharing_walking_sec] + session[:time_bikesharing_bike_sec]
       session[:time_bikesharing_total] = AnswersController::sec_to_hour_string(session[:time_bikesharing_total_sec])
@@ -373,7 +372,7 @@ class AnswersController < ApplicationController
       session[:calories_transit] = session[:calories_transit].round
 
       #Store variables for bikesharing
-      session[:time_bikesharing_walking_sec] = (@@time_walk_bike.sample * session[:time_transit_walk_sec]).round
+      session[:time_bikesharing_walking_sec] = @@time_walk_bike.sample
       session[:time_bikesharing_bike_sec] = (session[:bike_or_ebike] == 'Bike') ? session[:time_bike_sec] : (session[:time_bike_sec] * @@speed_ebike).round
       session[:time_bikesharing_total_sec] = session[:time_bikesharing_walking_sec] + session[:time_bikesharing_bike_sec]
       session[:time_bikesharing_total] = AnswersController::sec_to_hour_string(session[:time_bikesharing_total_sec])
@@ -553,7 +552,7 @@ class AnswersController < ApplicationController
       session[:calories_transit] = session[:calories_transit].round
 
       #Store variables for bikesharing
-      session[:time_bikesharing_walking_sec] = (@@time_walk_bike.sample * session[:time_transit_walk_sec]).round
+      session[:time_bikesharing_walking_sec] = @@time_walk_bike.sample
       session[:time_bikesharing_bike_sec] = (session[:bike_or_ebike] == 'Bike') ? session[:time_bike_sec] : (session[:time_bike_sec] * @@speed_ebike).round
       session[:time_bikesharing_total_sec] = session[:time_bikesharing_walking_sec] + session[:time_bikesharing_bike_sec]
       session[:time_bikesharing_total] = AnswersController::sec_to_hour_string(session[:time_bikesharing_total_sec])

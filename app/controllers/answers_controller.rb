@@ -28,7 +28,7 @@ class AnswersController < ApplicationController
     @@calories_ebike_per_hour = 300.0
     @@calories_walk_per_hour = 270.0
     @@calories_transit_per_hour = 140.0
-    @@time_walk_bike = [5,10,15]
+    @@time_walk_bike = [5*60,10*60,15*60]
     @@speed_ebike = 1/1.4 #relative to the speed of a regular bike
     @@price_bike_proposed = [90, 100, 110]
     @@income_possibilities = ['<20k', '20k - 50k', '50k - 80k', '> 80k']
@@ -66,123 +66,6 @@ class AnswersController < ApplicationController
     @@bike_ebike_table = []
     ((@@number_activities + 1) / 2).times{@@bike_ebike_table.append('Bike')}
     ((@@number_activities + 2) / 2).times{@@bike_ebike_table.append('Electric Bike')}
-
-    def self.generate_array(coordinates)
-      session[:price_transit_pass_proposed] = @@price_bike_proposed.sample
-      #Store time duration for car
-      response_car = HTTParty.get(@@maps_API_url+coordinates+"&mode=driving")
-      json_car = JSON.parse(response_car.body)
-      status_car = json_car['status']
-      if status_car != 'OK'
-        flash[:message] = "It looks like your adress is not valid. Please try again"
-        redirect_to '/page2'
-      end
-      session[:time_car] = json_car['routes'][0]['legs'][0]['duration']['text']
-      session[:time_car_sec] = json_car['routes'][0]['legs'][0]['duration']['value']
-      #In meters
-      distance_car = json_car['routes'][0]['legs'][0]['distance']['value']
-      cost_car = session[:has_e_car] ? @@cost_ecar_per_meter : @@cost_car_per_meter
-      session[:cost_car] = (distance_car * cost_car).round(2)
-      ghg_car = session[:has_e_car] ? @@GHG_ecar_per_meter : @@GHG_car_per_meter
-      #FIXME: is rounf 2 enough ?
-      session[:ghg_car] = (distance_car * ghg_car).round(4)
-      #Store time duration for bikes
-      response_bike = HTTParty.get(@@maps_API_url+coordinates+"&mode=bicycling")
-      session[:url_bike] = @@maps_API_url+coordinates+"&mode=bicycling"
-      json_bike = JSON.parse(response_bike.body)
-      status_bike = json_bike['status']
-      if status_bike != 'OK'
-        flash[:message] = "It looks like your adress is not valid. Please try again"
-        redirect_to '/page2'
-      end
-      session[:time_bike_google_sec] = json_bike['routes'][0]['legs'][0]['duration']['value']
-      session[:time_bike_sec] = session[:has_e_bike] ? (session[:time_bike_google_sec] * @@speed_ebike).round : session[:time_bike_google_sec]
-      session[:time_bike] = AnswersController::sec_to_hour_string(session[:time_bike_sec])
-      distance_bike = json_bike['routes'][0]['legs'][0]['distance']['value']
-      session[:calories_bike] = session[:has_e_bike] ? session[:time_bike_sec] * @@calories_ebike_per_sec : session[:time_bike_sec] * @@calories_bike_per_sec
-      session[:calories_bike] = session[:calories_bike].round
-      #Store time duration for walk
-      response_walk = HTTParty.get(@@maps_API_url+coordinates+"&mode=walking")
-      session[:url_walk] = @@maps_API_url+coordinates+"&mode=walking"
-      json_walk = JSON.parse(response_walk.body)
-      status_walk = json_walk['status']
-      if status_walk != 'OK'
-        flash[:message] = "It looks like your adress is not valid. Please try again"
-        redirect_to '/page2'
-      end
-      session[:time_walk] = json_walk['routes'][0]['legs'][0]['duration']['text']
-      session[:time_walk_sec] = json_walk['routes'][0]['legs'][0]['duration']['value']
-      session[:calories_walk] = session[:time_walk_sec] * @@calories_walk_per_sec
-      session[:calories_walk] = session[:calories_walk].round
-      #Store time duration for transit and time walking to station
-      response_transit = HTTParty.get(@@maps_API_url+coordinates+"&mode=transit")
-      json_transit = JSON.parse(response_transit.body)
-      status_transit = json_transit['status']
-      if status_transit != 'OK'
-        flash[:message] = "It looks like your adress is not valid. Please try again"
-        redirect_to '/page2'
-      end
-      session[:time_transit_total] = json_transit['routes'][0]['legs'][0]['duration']['text']
-      session[:time_transit_total_sec] = json_transit['routes'][0]['legs'][0]['duration']['value']
-      steps = json_transit['routes'][0]['legs'][0]['steps']
-      duration_walking = 0
-      distance_walking = 0
-      distance_transit = 0
-      for step in steps
-        if step['travel_mode'] == 'WALKING'
-          duration_walking += step['duration']['value']
-          distance_walking += step['distance']['value']
-        else
-          distance_transit += step['distance']['value']
-        end
-      end
-      session[:time_transit_walk_sec] = duration_walking
-      session[:time_transit_walk] = AnswersController::sec_to_hour_string(duration_walking)
-      session[:ghg_transit] = distance_transit * @@GHG_transit_per_meter
-      session[:calories_transit] = session[:time_transit_walk_sec] * @@calories_walk_per_sec
-      session[:calories_transit] += duration_transit * @@calories_transit_per_sec
-      session[:calories_transit] = session[:calories_transit].round
-
-      #Store variables for bikesharing
-      session[:time_bikesharing_walking_sec] = @@time_walk_bike.sample
-      session[:time_bikesharing_bike_sec] = (session[:bike_or_ebike] == 'Bike') ? session[:time_bike_sec] : (session[:time_bike_sec] * @@speed_ebike).round
-      session[:time_bikesharing_total_sec] = session[:time_bikesharing_walking_sec] + session[:time_bikesharing_bike_sec]
-      session[:time_bikesharing_total] = AnswersController::sec_to_hour_string(session[:time_bikesharing_total_sec])
-      session[:time_bikesharing_walking] = AnswersController::sec_to_hour_string(session[:time_bikesharing_walking_sec])
-      session[:ghg_bikesharing] = session[:bike_or_ebike] == 'Bike' ? 0 : distance_bike * @@GHG_ebike_per_meter
-      session[:calories_bikesharing] = (session[:bike_or_ebike] == 'Bike') ? session[:time_bikesharing_bike_sec] * @@calories_bike_per_sec : session[:time_bikesharing_bike_sec] * @@calories_ebike_per_sec
-      session[:calories_bikesharing] += session[:time_bikesharing_walking_sec] * @@calories_walk_per_sec
-      session[:calories_bikesharing] = session[:calories_bikesharing].round
-    end
-
-    def self.save_data
-      @answer = Answer.new(
-      :peopleId => session[:peopleId],
-      :has_transit_pass => session[:has_transit_pass],
-      :has_car => session[:has_car],
-      :has_e_car => session[:has_e_car],
-      :has_bike => session[:has_bike],
-      :has_e_bike => session[:has_e_bike],
-      :lat_origin => session[:lat_origin],
-      :lat_destination => session[:lat_destination],
-      :lon_origin => session[:lon_origin],
-      :lon_destination => session[:lon_destination],
-      :activity => session[:current_activity],
-      :time_car => session[:time_car_sec],
-      :time_bike => session[:time_bike_sec],
-      :time_walk => session[:time_walk_sec],
-      :time_transit_total => session[:time_transit_total_sec],
-      :time_transit_walk => session[:time_transit_walk_sec],
-      :price_transit_pass_proposed => session[:price_transit_pass_proposed],
-      :wants_transit_pass => session[:wants_transit_pass],
-      :age => session[:age],
-      :income => session[:income],
-      :frequency => session[:frequency],
-      :time_bikesharing_total => session[:time_bikesharing_total_sec],
-      :time_bikesharing_walking => session[:time_bikesharing_walking_sec],
-      :bikesharing_option => session[:bike_or_ebike])
-      @answer.save!
-    end
 
     def open_page
       reset_session

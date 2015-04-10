@@ -211,6 +211,7 @@ class AnswersController < ApplicationController
       session[:calories_bike] = session[:has_e_bike] ? session[:time_bike_sec] * @@calories_ebike_per_sec : session[:time_bike_sec] * @@calories_bike_per_sec
       session[:calories_bike] = session[:calories_bike].round
       session[:ghg_bike] = session[:has_e_bike] ? distance_bike * @@GHG_ebike_per_meter : 0
+      session[:ghg_bike] = session[:ghg_bike].round(2)
 
       #Store time duration for walk
       response_walk = HTTParty.get(@@maps_API_url+coordinates+"&mode=walking")
@@ -394,7 +395,8 @@ class AnswersController < ApplicationController
       session[:calories_bike] = session[:has_e_bike] ? session[:time_bike_sec] * @@calories_ebike_per_sec : session[:time_bike_sec] * @@calories_bike_per_sec
       session[:calories_bike] = session[:calories_bike].round
       session[:ghg_bike] = session[:has_e_bike] ? distance_bike * @@GHG_ebike_per_meter : 0
-
+      session[:ghg_bike] = session[:ghg_bike].round(2)
+      
       #Store time duration for walk
       response_walk = HTTParty.get(@@maps_API_url+coordinates+"&mode=walking")
       session[:url_walk] = @@maps_API_url+coordinates+"&mode=walking"

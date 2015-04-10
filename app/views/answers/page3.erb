@@ -101,7 +101,7 @@
     <tr>
       <td class="row_header"> Category</td>
       <% if session[:has_car] %> <td> Your car </td> <% end %>
-      <% if session[:has_bike] %> <td> Your bike </td> <% end %>
+      <% if session[:has_bike] %> <td> <%= session[:bike_type] %> </td> <% end %>
       <td> Public transit </td>
       <td> Your feet </td>
       <td class="highlight"> <%= session[:bike_or_ebike] %> </td>
@@ -136,7 +136,7 @@
     <tr>
       <td class="row_header"> GHG (lbs CO2) </td>
       <% if session[:has_car] %> <td> <%= session[:ghg_car] %> </td> <% end %>
-      <% if session[:has_bike] %> <td> 0 </td> <% end %>
+      <% if session[:has_bike] %> <td> <%= session[:ghg_bike] %> </td> <% end %>
       <td> <%= session[:ghg_transit] %> </td>
       <td> 0 </td>
       <td><%= session[:ghg_bikesharing] %></td>

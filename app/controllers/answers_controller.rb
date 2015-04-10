@@ -344,8 +344,8 @@ class AnswersController < ApplicationController
       if params[:address_destination] && params[:origin] && params[:frequency] && params[:current_mode]
         session[:lat_destination] = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address_destination]).lat
         session[:lon_destination] = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address_destination]).lng
-        session[:lat_origin] = (params[:address_destination] == 'Work') ? session[:lat_work]: session[:lat_home]
-        session[:lon_origin] = (params[:address_destination] == 'Work') ? session[:lon_work]: session[:lon_home]
+        session[:lat_origin] = (params[:origin] == 'Work') ? session[:lat_work]: session[:lat_home]
+        session[:lon_origin] = (params[:origin] == 'Work') ? session[:lon_work]: session[:lon_home]
         session[:frequency] = params[:frequency]
         session[:current_mode] = params[:current_mode]
         redirect_to '/activity2'
@@ -396,7 +396,7 @@ class AnswersController < ApplicationController
       session[:calories_bike] = session[:calories_bike].round
       session[:ghg_bike] = session[:has_e_bike] ? distance_bike * @@GHG_ebike_per_meter : 0
       session[:ghg_bike] = session[:ghg_bike].round(2)
-      
+
       #Store time duration for walk
       response_walk = HTTParty.get(@@maps_API_url+coordinates+"&mode=walking")
       session[:url_walk] = @@maps_API_url+coordinates+"&mode=walking"

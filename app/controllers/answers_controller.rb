@@ -12,25 +12,25 @@ class AnswersController < ApplicationController
 
 ####################################################################################################
     @@activity_table = ['lunch','leisure','week-end']
-    @@cost_car_per_mile = 1.37
-    @@cost_ecar_per_mile = 1.37
+    @@cost_car_per_mile = 0.13
+    @@cost_ecar_per_mile = 0.06
     @@cost_transit = 2.5
     @@cost_bikesharing_member_inf_30 = 0
     @@cost_bikesharing_member_sup_30 = 4
     @@cost_bikesharing_non_member_inf_30 = 9
     @@cost_bikesharing_non_member_sup_30 = 11
-    @@GHG_car_per_mile = 0.8
-    @@GHG_ecar_per_mile = 0.4
-    @@GHG_transit_per_mile = 0.8
-    @@GHG_ebike_per_mile = 0.8
-    @@calories_car_per_hour = 1000
-    @@calories_bike_per_hour = 10000
-    @@calories_ebike_per_hour = 10000
-    @@calories_walk_per_hour = 10000
-    @@calories_transit_per_hour = 1000
+    @@GHG_car_per_mile = 0.870
+    @@GHG_ecar_per_mile = 0.600
+    @@GHG_transit_per_mile = 0.008
+    @@GHG_ebike_per_mile = 0.010
+    @@calories_car_per_hour = 140
+    @@calories_bike_per_hour = 400
+    @@calories_ebike_per_hour = 300
+    @@calories_walk_per_hour = 270
+    @@calories_transit_per_hour = 140
     #Rate to walking to a transit station rather than a bike station
     @@time_walk_bike = [0.5,1,1.5]
-    @@speed_ebike = 1.4 #relative to the speed of a regular bike
+    @@speed_ebike = 1/1.4 #relative to the speed of a regular bike
     @@price_bike_proposed = [90, 100, 110]
     @@income_possibilities = ['<20k', '20k - 50k', '50k - 80k', '> 80k']
     @@frequency_possibilities = ['everyday', '2-3 times a week', 'once a week', 'twice a month']
@@ -266,7 +266,7 @@ class AnswersController < ApplicationController
     end
 
     def answer_page2
-      if params[:address_origin] && params[:address_destination] && params[:frequency]
+      if params[:address_origin] && params[:address_destination] && params[:frequency] && params[:current_mode]
         session[:lat_origin] = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address_origin]).lat
         session[:lon_origin] = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address_origin]).lng
         session[:lat_destination] = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address_destination]).lat
@@ -276,6 +276,7 @@ class AnswersController < ApplicationController
         session[:lat_work] = session[:lat_destination]
         session[:lon_work] = session[:lon_destination]
         session[:frequency] = params[:frequency]
+        session[:current_mode] = params[:current_mode]
         redirect_to '/page3'
       else
         flash[:message] = "All the questions are required on this page."
@@ -328,8 +329,8 @@ class AnswersController < ApplicationController
         flash[:message] = "It looks like your adress is not valid. Please try again"
         redirect_to '/page2'
       end
-      session[:time_walk] = json_walk['routes'][0]['legs'][0]['duration']['text']
       session[:time_walk_sec] = json_walk['routes'][0]['legs'][0]['duration']['value']
+      session[:time_walk] = AnswersController::sec_to_hour_string(session[:time_walk_sec])
       session[:calories_walk] = session[:time_walk_sec] * @@calories_walk_per_sec
       #Store time duration for transit and time walking to station
       response_transit = HTTParty.get(@@maps_API_url+coordinates+"&mode=transit")
@@ -378,8 +379,10 @@ class AnswersController < ApplicationController
     end
 
     def answer_page3
-      if params[:wants_transit_pass]
+      if params[:wants_transit_pass] && params[:chosen_mode] && params[:chosen_mode_back]
         session[:wants_transit_pass] = (params[:wants_transit_pass] == 'Yes')
+        session[:chosen_mode] = params[:chosen_mode]
+        session[:chosen_mode_back] = params[:chosen_mode_back]
         #AnswersController::save_data
         @answer = Answer.new(
         :peopleId => session[:peopleId],
@@ -417,7 +420,10 @@ class AnswersController < ApplicationController
         :cal_bike => session[:calories_bike],
         :cal_transit => session[:calories_transit],
         :cal_walk => session[:calories_walk],
-        :cal_bikesharing => session[:calories_bikesharing])
+        :cal_bikesharing => session[:calories_bikesharing],
+        :current_mode => session[:current_mode],
+        :chosen_mode => session[:chosen_mode],
+        :chosen_mode_back => session[:chosen_mode_back])
         @answer.save!
         redirect_to('/activity1/')
       else
@@ -438,12 +444,13 @@ class AnswersController < ApplicationController
     end
 
     def answer_activity1
-      if params[:address_destination] && params[:origin] && params[:frequency]
+      if params[:address_destination] && params[:origin] && params[:frequency] && params[:current_mode]
         session[:lat_destination] = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address_destination]).lat
         session[:lon_destination] = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address_destination]).lng
         session[:lat_origin] = (params[:address_destination] == 'Work') ? session[:lat_work]: session[:lat_home]
         session[:lon_origin] = (params[:address_destination] == 'Work') ? session[:lon_work]: session[:lon_home]
         session[:frequency] = params[:frequency]
+        session[:current_mode] = params[:current_mode]
         redirect_to '/activity2'
       else
         flash[:message] = "All the questions are required on this page."
@@ -496,8 +503,8 @@ class AnswersController < ApplicationController
         flash[:message] = "It looks like your adress is not valid. Please try again"
         redirect_to '/page2'
       end
-      session[:time_walk] = json_walk['routes'][0]['legs'][0]['duration']['text']
       session[:time_walk_sec] = json_walk['routes'][0]['legs'][0]['duration']['value']
+      session[:time_walk] = AnswersController::sec_to_hour_string(session[:time_walk_sec])
       session[:calories_walk] = session[:time_walk_sec] * @@calories_walk_per_sec
       #Store time duration for transit and time walking to station
       response_transit = HTTParty.get(@@maps_API_url+coordinates+"&mode=transit")
@@ -546,8 +553,10 @@ class AnswersController < ApplicationController
     end
 
     def answer_activity2
-      if params[:wants_transit_pass]
+      if params[:wants_transit_pass] && params[:chosen_mode] && params[:chosen_mode_back]
         session[:wants_transit_pass] = (params[:wants_transit_pass] == 'Yes')
+        session[:chosen_mode] = params[:chosen_mode]
+        session[:chosen_mode_back] = params[:chosen_mode_back]
         #AnswersController::save_data
         @answer = Answer.new(
         :peopleId => session[:peopleId],
@@ -585,7 +594,10 @@ class AnswersController < ApplicationController
         :cal_bike => session[:calories_bike],
         :cal_transit => session[:calories_transit],
         :cal_walk => session[:calories_walk],
-        :cal_bikesharing => session[:calories_bikesharing])
+        :cal_bikesharing => session[:calories_bikesharing],
+        :current_mode => session[:current_mode],
+        :chosen_mode => session[:chosen_mode],
+        :chosen_mode_back => session[:chosen_mode_back])
         @answer.save!
         redirect_to('/activity1/')
       else

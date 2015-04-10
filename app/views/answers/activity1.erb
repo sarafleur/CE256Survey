@@ -1,20 +1,21 @@
-<h2> Where do you do <%= session[:current_activity] %> </h2>
+<h2> Where do you go for <%= session[:current_activity] %>?</h2>
 
 <% if flash[:message] %>
   <p>
     <span class="error"><%= flash[:message] %></span>
   </p>
 <% end %>
-
+<form action="/skip" method="get" >
+  <input type="submit" name="skip" value="This activity does not apply to me, go to the next one" class="skip-button">
+</form>
 <form action="/activity1" method="POST" >
   <ol role="list" class="question-list" >
-
           <ul class="question-item">
             <div class="question-title"> <%= question_title(session[:current_activity]) %> </div>
             <div class="question-description">This adress won't be stored, we will just use it to compute the commuting time. Example: 2333 Fulton Street, 94704, Berkeley, CA </div>
                 <input name="address_destination" size="100" id="address_destination">
           </ul>
-
+          <br>
           <ul class="question-item">
             <div class="question-title">Where do you come from when you go there?</div>
             <div class="question-description"></div>
@@ -27,15 +28,40 @@
                 <span class="choice-label">Work</span>
               </ul>
           </ul>
-
+          <br>
           <ul class="question-item">
-            <div class="question-title">How often do you do this activity ?</div>
+            <div class="question-title">How often do you make this trip ?</div>
             <div class="question-description"></div>
             <select name="frequency" id="frequency">
               <% for frequency in session[:frequency_possibilities] %>
                 <option value= <%= frequency %> ><%= frequency %></option>
               <% end %>
             </select>
+          </ul>
+          <br>
+          <ul class="question-item">
+            <div class="question-title">What transportation mode do you mostly use to make this trip nowadays?</div>
+            <div class="question-description"></div>
+              <% if session[:has_car] %>
+              <ul>
+                <input type="radio" name="current_mode" value="car"role="radio">
+                <span class="choice-label">Car</span>
+              </ul>
+              <% end %>
+              <% if session[:has_bike] %>
+              <ul>
+                <input type="radio" name="current_mode" value="bike" role="radio">
+                <span class="choice-label">Bike</span>
+              </ul>
+              <% end %>
+              <ul>
+                <input type="radio" name="current_mode" value="transit" role="radio">
+                <span class="choice-label">Transit</span>
+              </ul>
+              <ul>
+                <input type="radio" name="current_mode" value="walk" role="radio">
+                <span class="choice-label">Walking</span>
+              </ul>
           </ul>
   <div class="ss-item ss-navigate"><table id="navigation-table"><tbody><tr>
     <input type="submit" name="continue" value="Continue &raquo;" id="ss-submit" class="continue-button">

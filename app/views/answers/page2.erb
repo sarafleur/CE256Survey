@@ -1,4 +1,4 @@
-<h2>Page 2: Home/Work Locations</h2>
+<h2>Home/Work Locations</h2>
 
 <% if flash[:message] %>
   <p>
@@ -13,14 +13,15 @@
             <div class="question-description">This adress won't be stored, we will just use it to compute the commuting time. Example: 140 Market St, San Francisco, CA </div>
                 <input name="address_origin" size="100" id="address_origin">
           </ul>
-
+          <br>
           <ul class="question-item">
-            <div class="question-title">Where do you work? Please enter a valid adress.</div>
-            <div class="question-description">This adress won't be stored, we will just use it to compute the commuting time. Example: 2333 Fulton Street, 94704, Berkeley, CA </div>
+            <div class="question-title">Where do you work? Or what is the place you must often commute to? Please enter a valid adress.</div>
+            <div class="question-description">This adress won't be stored, we will just use it to compute the commuting time. Example: UC Berkeley, or 2333 Fulton Street, Berkeley, CA ... </div>
                 <input name="address_destination" size="100" id="address_destination">
           </ul>
+          <br>
           <ul class="question-item">
-            <div class="question-title">How often do you do this activity ?</div>
+            <div class="question-title">How often do you make this trip ?</div>
             <div class="question-description"></div>
             <select name="frequency" id="frequency">
               <% for frequency in session[:frequency_possibilities] %>
@@ -28,6 +29,32 @@
               <% end %>
             </select>
           </ul>
+          <br>
+          <ul class="question-item">
+            <div class="question-title">What transportation mode do you mostly use to make this trip nowadays?</div>
+            <div class="question-description"></div>
+              <% if session[:has_car] %>
+              <ul>
+                <input type="radio" name="current_mode" value="car"role="radio">
+                <span class="choice-label">Car</span>
+              </ul>
+              <% end %>
+              <% if session[:has_bike] %>
+              <ul>
+                <input type="radio" name="current_mode" value="bike" role="radio">
+                <span class="choice-label">Bike</span>
+              </ul>
+              <% end %>
+              <ul>
+                <input type="radio" name="current_mode" value="transit" role="radio">
+                <span class="choice-label">Transit</span>
+              </ul>
+              <ul>
+                <input type="radio" name="current_mode" value="walk" role="radio">
+                <span class="choice-label">Walking</span>
+              </ul>
+          </ul>
+          <br>
   <div class="ss-item ss-navigate"><table id="navigation-table"><tbody><tr>
     <input type="submit" name="continue" value="Continue &raquo;" id="ss-submit" class="continue-button">
     </tr></tbody></table>

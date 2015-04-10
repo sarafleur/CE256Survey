@@ -17,3 +17,7 @@ table, th, td {
   color: red;
   font-weight:bold;
 }
+
+.question-title {
+  font-weight:bold;
+}

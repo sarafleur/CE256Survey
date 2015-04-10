@@ -1,4 +1,4 @@
-<h2>Page 3: Best transit option</h2>
+<h2>Best transit option</h2>
 
 <% if flash[:message] %>
   <p>
@@ -9,7 +9,7 @@
 <form action="/page3" method="POST" >
   <ol role="list" class="question-list" >
     <ul class="question-item">
-      <div class="question-title">Given what you see in the table below, would you consider taking a year bike-sharing membership? Price is <%= session[:price_transit_pass_proposed] %></div>
+      <div class="question-title">Given what you see in the table below, would you consider taking a <span class="highlight">year bike-sharing membership? Price is <%= session[:price_transit_pass_proposed] %></span></div>
       <div class="question-description"></div>
         <ul>
           <input type="radio" name="wants_transit_pass" value="Yes" id="wants_transit_pass_yes" role="radio">
@@ -20,13 +20,72 @@
           <span class="choice-label">No</span>
         </ul>
     </ul>
+    <br>
+    <ul class="question-item">
+      <div class="question-title">Given the information below, what alternative would you choose to make this trip?</div>
+      <div class="question-description"></div>
+        <% if session[:has_car] %>
+        <ul>
+          <input type="radio" name="chosen_mode" value="car"role="radio">
+          <span class="choice-label">Car</span>
+        </ul>
+        <% end %>
+        <% if session[:has_bike] %>
+        <ul>
+          <input type="radio" name="chosen_mode" value="bike" role="radio">
+          <span class="choice-label">Bike</span>
+        </ul>
+        <% end %>
+        <ul>
+          <input type="radio" name="chosen_mode" value="transit" role="radio">
+          <span class="choice-label">Transit</span>
+        </ul>
+        <ul>
+          <input type="radio" name="chosen_mode" value="walk" role="radio">
+          <span class="choice-label">Walking</span>
+        </ul>
+        <ul>
+          <input type="radio" name="chosen_mode" value="bikesharing" role="radio">
+          <span class="choice-label">Bike Sharing</span>
+        </ul>
+    </ul>
+    <br>
+    <ul class="question-item">
+      <div class="question-title">Assuming similar data, what alternative would you choose on the way back?</div>
+      <div class="question-description"></div>
+        <% if session[:has_car] %>
+        <ul>
+          <input type="radio" name="chosen_mode_back" value="car"role="radio">
+          <span class="choice-label">Car</span>
+        </ul>
+        <% end %>
+        <% if session[:has_bike] %>
+        <ul>
+          <input type="radio" name="chosen_mode_back" value="bike" role="radio">
+          <span class="choice-label">Bike</span>
+        </ul>
+        <% end %>
+        <ul>
+          <input type="radio" name="chosen_mode_back" value="transit" role="radio">
+          <span class="choice-label">Transit</span>
+        </ul>
+        <ul>
+          <input type="radio" name="chosen_mode_back" value="walk" role="radio">
+          <span class="choice-label">Walking</span>
+        </ul>
+        <ul>
+          <input type="radio" name="chosen_mode_back" value="bikesharing" role="radio">
+          <span class="choice-label">Bike Sharing</span>
+        </ul>
+    </ul>
+    <br>
   <div class="ss-item ss-navigate"><table id="navigation-table"><tbody><tr>
     <input type="submit" name="continue" value="Continue &raquo;" id="ss-submit" class="continue-button">
     </tr></tbody></table>
   </div>
   </ol>
 </form>
-
+<br>
 <table id='transit_options'>
   <thead>
     <tr>
@@ -70,8 +129,8 @@
       <td> $<%= session[:cost_transit] %> </td>
       <td> $0 </td>
       <td>
-        <p class="highlight">With membership: <%= session[:cost_bikesharing_member] %> </p>
-        <p class="highlight">Without membership: <%= session[:cost_bikesharing_non_member] %> </p>
+        <p class="highlight">With membership: $<%= session[:cost_bikesharing_member] %> </p>
+        <p class="highlight">Without membership:$<%= session[:cost_bikesharing_non_member] %> </p>
       </td>
     </tr>
     <tr>

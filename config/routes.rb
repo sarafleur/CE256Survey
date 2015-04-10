@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   post '/admin/data' => 'admin#data'
   get '/admin/data' => 'admin#data'
   get '/admin/csv' => 'admin#export_csv'
-  
+
 
   #Survey routes
   get '/' => 'answers#open_page'
@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   get '/activity2' => 'answers#render_activity2'
   post '/activity2' => 'answers#answer_activity2'
   get '/last' => 'answers#render_last'
+  get 'skip' => 'answers#render_activity1'
 
 
 

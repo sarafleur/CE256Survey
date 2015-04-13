@@ -10,7 +10,7 @@ class AnswersController < ApplicationController
   before_action :set_answer, only: [:show, :edit, :update, :destroy]
 
 ####################################################################################################
-    @@activity_table = ['Lunch','Leisure','Working Out','Shopping']
+    @@activity_table = ['Lunch','Leisure','Working-out / Exercise / Practice sports','Shopping']
     @@cost_car_per_mile = 0.13
     @@cost_ecar_per_mile = 0.06
     @@cost_transit = 2.5
@@ -18,10 +18,10 @@ class AnswersController < ApplicationController
     @@cost_bikesharing_member_sup_30 = 4
     @@cost_bikesharing_non_member_inf_30 = 9
     @@cost_bikesharing_non_member_sup_30 = 11
-    @@GHG_car_per_mile = 0.870
-    @@GHG_ecar_per_mile = 0.600
-    @@GHG_transit_per_mile = 0.008
-    @@GHG_ebike_per_mile = 0.010
+    @@GHG_car_per_mile = 0.870 * 453
+    @@GHG_ecar_per_mile = 0.600 * 453
+    @@GHG_transit_per_mile = 0.008 * 453
+    @@GHG_ebike_per_mile = 0.010 * 453
     @@calories_car_per_hour = 140.0
     @@calories_bike_per_hour = 400.0
     @@calories_ebike_per_hour = 300.0
@@ -31,7 +31,7 @@ class AnswersController < ApplicationController
     @@speed_ebike = 1/1.4 #relative to the speed of a regular bike
     @@price_bike_proposed = [90, 100, 110]
     @@income_possibilities = ['<20k', '20k - 50k', '50k - 80k', '> 80k']
-    @@frequency_possibilities = ['everyday', '2-3 times a week', 'once a week', 'twice a month']
+    @@frequency_possibilities = ['everyday', '5 days a week', '2-3 times a week', 'once a week', 'twice a month']
 ########################################################################################################
 
     def self.per_mile_to_per_meter(var)

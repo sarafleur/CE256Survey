@@ -21,3 +21,7 @@ table, th, td {
 .question-title {
   font-weight:bold;
 }
+
+.source {
+  font-weight:italic;
+}

@@ -162,11 +162,15 @@ class AnswersController < ApplicationController
         session[:lon_work] = session[:lon_destination]
         session[:frequency] = params[:frequency]
         session[:current_mode] = params[:current_mode]
-        redirect_to '/page3'
+        redirect_to '/bikeSharingPres'
       else
         flash[:message] = "All the questions are required on this page."
         redirect_to '/page2'
       end
+    end
+
+    def render_bikeSharingPres
+      render('bikeSharingPres')
     end
 
     def render_page3

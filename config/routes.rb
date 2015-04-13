@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   post '/activity2' => 'answers#answer_activity2'
   get '/last' => 'answers#render_last'
   get 'skip' => 'answers#render_activity1'
+  get '/bikeSharingPres' => 'answers#render_bikeSharingPres'
 
 
 
